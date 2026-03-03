@@ -41,7 +41,15 @@ func main() {
 					}
 				}
 
-				fmt.Printf("[报警] Namespace %s 的 Pod %s 发生 OOMKilled！\n", newPod.Namespace, newPod.Name)
+				fmt.Printf("[报警] UPDATE Namespace %s 的 Pod %s 发生 OOMKilled！\n", newPod.Namespace, newPod.Name)
+			}
+		},
+		AddFunc: func(obj interface{}) {
+			pod := obj.(*corev1.Pod)
+			for _, cs := range pod.Status.ContainerStatuses {
+				if cs.State.Terminated != nil && cs.State.Terminated.Reason == "OOMKilled" {
+					fmt.Printf("[报警] ADD Namespace %s 的 Pod %s 发生 OOMKilled！\n", pod.Namespace, pod.Name)
+				}
 			}
 		},
 	})
