@@ -49,6 +49,8 @@ func main() {
 			for _, cs := range pod.Status.ContainerStatuses {
 				if cs.State.Terminated != nil && cs.State.Terminated.Reason == "OOMKilled" {
 					fmt.Printf("[报警] ADD Namespace %s 的 Pod %s 发生 OOMKilled！\n", pod.Namespace, pod.Name)
+				} else if cs.LastTerminationState.Terminated != nil && cs.LastTerminationState.Terminated.Reason == "OOMKilled" {
+					fmt.Printf("[报警] ADD Namespace %s 的 Pod %s 发生 OOMKilled！\n", pod.Namespace, pod.Name)
 				}
 			}
 		},
